@@ -1,0 +1,293 @@
+/* Styles spécifiques pour la page d'administration */
+
+/* Background de la page */
+body.admin-page-body {
+    background-color: #fff8f0;
+}
+
+.admin-page-main {
+    background-color: #fff8f0;
+    min-height: calc(100vh - 200px);
+    padding: 2rem 0;
+}
+
+/* Container principal avec marges */
+.admin-page-main .container {
+    max-width: 1400px;
+}
+
+/* En-tête de la page */
+.admin-header {
+    margin-bottom: 2rem;
+}
+
+/* Card du tableau avec style moderne */
+.admin-table-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    border: none;
+}
+
+.admin-table-card .card-header {
+    background-color: #ffffff;
+    border-bottom: 2px solid #f3f4f6;
+    padding: 1.5rem;
+    border-radius: 16px 16px 0 0;
+}
+
+.admin-table-card .card-header h5 {
+    color: #1f2937;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Tableau stylé */
+.admin-table-card .table {
+    margin-bottom: 0;
+}
+
+.admin-table-card .table thead {
+    background-color: #f9fafb;
+}
+
+.admin-table-card .table thead th {
+    border-bottom: 2px solid #e5e7eb;
+    padding: 1rem 1.5rem;
+    font-weight: 600;
+    color: #374151;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.admin-table-card .table tbody td {
+    padding: 1.25rem 1.5rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.admin-table-card .table tbody tr:hover {
+    background-color: #f9fafb;
+    transition: background-color 0.2s ease;
+}
+
+.admin-table-card .table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Badges */
+.admin-table-card .badge {
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.75rem;
+}
+
+/* Boutons d'action */
+.admin-action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.admin-action-btn {
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    border: 2px solid;
+}
+
+.admin-action-btn-edit {
+    border-color: #3b82f6;
+    color: #3b82f6;
+    background-color: transparent;
+}
+
+.admin-action-btn-edit:hover {
+    background-color: #3b82f6;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.admin-action-btn-delete {
+    border-color: #ef4444;
+    color: #ef4444;
+    background-color: transparent;
+}
+
+.admin-action-btn-delete:hover {
+    background-color: #ef4444;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+}
+
+/* Bouton Ajouter */
+.admin-add-btn {
+    background-color: #ff6b35;
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+}
+
+.admin-add-btn:hover {
+    background-color: #e55a2b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+    color: #ffffff;
+}
+
+/* Message vide */
+.admin-empty-state {
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.admin-empty-state i {
+    font-size: 4rem;
+    color: #d1d5db;
+    margin-bottom: 1rem;
+}
+
+/* Modal Bootstrap personnalisée */
+.admin-modal .modal-content {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.admin-modal .modal-header {
+    border-bottom: 2px solid #f3f4f6;
+    padding: 1.5rem;
+    border-radius: 16px 16px 0 0;
+    background-color: #ffffff;
+}
+
+.admin-modal .modal-title {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.admin-modal .modal-body {
+    padding: 1.5rem;
+}
+
+.admin-modal .modal-footer {
+    border-top: 2px solid #f3f4f6;
+    padding: 1.5rem;
+    border-radius: 0 0 16px 16px;
+    background-color: #ffffff;
+}
+
+/* Formulaire dans la modal */
+.admin-modal .form-label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.admin-modal .form-control,
+.admin-modal .form-select {
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+    padding: 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.admin-modal .form-control:focus,
+.admin-modal .form-select:focus {
+    border-color: #ff6b35;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+    outline: none;
+}
+
+.admin-modal .btn-primary {
+    background-color: #ff6b35;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.admin-modal .btn-primary:hover {
+    background-color: #e55a2b;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+}
+
+.admin-modal .btn-secondary {
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+/* Alerts */
+.admin-alert {
+    border-radius: 12px;
+    border: none;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Miniatures d'images dans le tableau */
+.admin-table-card .table tbody td img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+}
+
+.admin-table-card .table tbody td .img-thumbnail {
+    transition: transform 0.2s ease;
+}
+
+.admin-table-card .table tbody td .img-thumbnail:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+/* Placeholder pour image absente */
+.admin-image-placeholder {
+    width: 60px;
+    height: 60px;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #e5e7eb;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-table-card .table {
+        font-size: 0.875rem;
+    }
+    
+    .admin-table-card .table thead th,
+    .admin-table-card .table tbody td {
+        padding: 0.75rem 1rem;
+    }
+    
+    .admin-action-buttons {
+        flex-direction: column;
+    }
+    
+    .admin-table-card .table tbody td img,
+    .admin-image-placeholder {
+        width: 50px;
+        height: 50px;
+    }
+}
+

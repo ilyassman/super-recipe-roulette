@@ -147,31 +147,53 @@ $(document).ready(function() {
             let specialBadge = '';
             // Vous pouvez ajouter une logique pour déterminer les badges spéciaux
             
+            // Normaliser le nom d'image
+            let imageName = recipe.image || '';
+            if (imageName) {
+                // Si le chemin contient déjà /assets/ ou http, extraire juste le nom
+                if (imageName.includes('/assets/') || imageName.startsWith('http')) {
+                    const parts = imageName.split(/[/\\]/);
+                    imageName = parts[parts.length - 1];
+                } else if (imageName.includes('/') || imageName.includes('\\')) {
+                    const parts = imageName.split(/[/\\]/);
+                    imageName = parts[parts.length - 1];
+                }
+            }
+            const imageUrl = imageName ? `/assets/img/${imageName}` : '';
+            
             html += `
                 <div class="col-md-4">
-                    <div class="card shadow-sm border-0 rounded-4 h-100 overflow-hidden recipe-card">
-                        <div class="card-img-top position-relative" style="height: 200px; background: linear-gradient(135deg, #8B4513 0%, #654321 100%);">
-                            ${specialBadge}
-                            <div class="position-absolute top-50 start-50 translate-middle text-white text-center">
-                                <i class="bi ${icon} fs-1"></i>
+                    <a href="/recette/${recipe.id}/details" class="text-decoration-none" style="color: inherit;">
+                        <div class="card shadow-sm border-0 rounded-4 h-100 overflow-hidden recipe-card" style="cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)'">
+                            <div class="card-img-top position-relative" style="height: 200px; background: linear-gradient(135deg, #8B4513 0%, #654321 100%); overflow: hidden;">
+                                ${specialBadge}
+                                ${imageUrl ? 
+                                    `<img src="${imageUrl}" alt="${recipe.titre}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                     <div class="position-absolute top-50 start-50 translate-middle text-white text-center" style="display: none;">
+                                         <i class="bi ${icon} fs-1"></i>
+                                     </div>` :
+                                    `<div class="position-absolute top-50 start-50 translate-middle text-white text-center">
+                                         <i class="bi ${icon} fs-1"></i>
+                                     </div>`
+                                }
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold mb-2">${recipe.titre}</h5>
+                                <p class="card-text text-muted small mb-3">${recipe.description || ''}</p>
+                                <div class="d-flex gap-2 flex-wrap align-items-center">
+                                    <span class="badge bg-info">
+                                        <i class="bi bi-clock me-1"></i>${recipe.temps_preparation || 'N/A'} min
+                                    </span>
+                                    <span class="badge ${badgeClass}">
+                                        ${difficulte}
+                                    </span>
+                                    <span class="badge bg-secondary">
+                                        ${categorieLabel}
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold mb-2">${recipe.titre}</h5>
-                            <p class="card-text text-muted small mb-3">${recipe.description || ''}</p>
-                            <div class="d-flex gap-2 flex-wrap align-items-center">
-                                <span class="badge bg-info">
-                                    <i class="bi bi-clock me-1"></i>${recipe.temps_preparation || 'N/A'} min
-                                </span>
-                                <span class="badge ${badgeClass}">
-                                    ${difficulte}
-                                </span>
-                                <span class="badge bg-secondary">
-                                    ${categorieLabel}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+                    </a>
                 </div>
             `;
         });

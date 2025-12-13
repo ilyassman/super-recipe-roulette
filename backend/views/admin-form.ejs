@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= action === 'add' ? 'Ajouter' : 'Modifier' %> une recette - Administration</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+    <!-- Header / Navigation -->
+    <%- include('partials/navbar', { activePage: 'admin', logged: logged, userRole: userRole }) %>
+
+    <!-- Main Content -->
+    <main class="container py-5">
+        <!-- En-tête -->
+        <div class="mb-4">
+            <a href="/admin" class="btn btn-outline-secondary mb-3">
+                <i class="bi bi-arrow-left me-2"></i>Retour à la liste
+            </a>
+            <h1 class="fw-bold mb-2">
+                <i class="bi bi-<%= action === 'add' ? 'plus-circle' : 'pencil' %> me-2 text-primary"></i>
+                <%= action === 'add' ? 'Ajouter' : 'Modifier' %> une recette
+            </h1>
+            <p class="text-muted">Remplissez le formulaire ci-dessous pour <%= action === 'add' ? 'ajouter' : 'modifier' %> une recette.</p>
+        </div>
+
+        <!-- Message d'erreur -->
+        <% if (error) { %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i><%= error %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } %>
+
+        <!-- Formulaire -->
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <form method="POST" action="<%= action === 'add' ? '/admin/add' : '/admin/edit/' + recipe.id %>">
+                    <!-- Titre -->
+                    <div class="mb-3">
+                        <label for="titre" class="form-label fw-semibold">
+                            Titre <span class="text-danger">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="titre" 
+                            name="titre" 
+                            value="<%= recipe ? (recipe.titre || '') : '' %>"
+                            required
+                            placeholder="Ex: Poulet rôti au citron"
+                        >
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label for="description" class="form-label fw-semibold">Description</label>
+                        <textarea 
+                            class="form-control" 
+                            id="description" 
+                            name="description" 
+                            rows="4"
+                            placeholder="Décrivez la recette..."
+                        ><%= recipe ? (recipe.description || '') : '' %></textarea>
+                    </div>
+
+                    <!-- Catégorie -->
+                    <div class="mb-3">
+                        <label for="categorie" class="form-label fw-semibold">
+                            Catégorie <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select" id="categorie" name="categorie" required>
+                            <option value="">Sélectionnez une catégorie</option>
+                            <option value="entree" <%= recipe && recipe.categorie === 'entree' ? 'selected' : '' %>>Entrée</option>
+                            <option value="plat" <%= recipe && recipe.categorie === 'plat' ? 'selected' : '' %>>Plat</option>
+                            <option value="dessert" <%= recipe && recipe.categorie === 'dessert' ? 'selected' : '' %>>Dessert</option>
+                        </select>
+                    </div>
+
+                    <!-- Temps de préparation -->
+                    <div class="mb-3">
+                        <label for="temps_preparation" class="form-label fw-semibold">Temps de préparation (minutes)</label>
+                        <input 
+                            type="number" 
+                            class="form-control" 
+                            id="temps_preparation" 
+                            name="temps_preparation" 
+                            value="<%= recipe ? (recipe.temps_preparation || '') : '' %>"
+                            min="1"
+                            placeholder="Ex: 30"
+                        >
+                    </div>
+
+                    <!-- Difficulté -->
+                    <div class="mb-3">
+                        <label for="difficulte" class="form-label fw-semibold">Difficulté</label>
+                        <select class="form-select" id="difficulte" name="difficulte">
+                            <option value="">Sélectionnez une difficulté</option>
+                            <option value="Facile" <%= recipe && recipe.difficulte === 'Facile' ? 'selected' : '' %>>Facile</option>
+                            <option value="Moyen" <%= recipe && recipe.difficulte === 'Moyen' ? 'selected' : '' %>>Moyen</option>
+                            <option value="Difficile" <%= recipe && recipe.difficulte === 'Difficile' ? 'selected' : '' %>>Difficile</option>
+                        </select>
+                    </div>
+
+                    <!-- Portions par défaut -->
+                    <div class="mb-3">
+                        <label for="portions_defaut" class="form-label fw-semibold">Portions par défaut</label>
+                        <input 
+                            type="number" 
+                            class="form-control" 
+                            id="portions_defaut" 
+                            name="portions_defaut" 
+                            value="<%= recipe ? (recipe.portions_defaut || 4) : 4 %>"
+                            min="1"
+                            placeholder="Ex: 4"
+                        >
+                    </div>
+
+                    <!-- Image (URL) -->
+                    <div class="mb-4">
+                        <label for="image" class="form-label fw-semibold">Image (URL)</label>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="image" 
+                            name="image" 
+                            value="<%= recipe ? (recipe.image || '') : '' %>"
+                            placeholder="Ex: https://example.com/image.jpg"
+                        >
+                        <small class="form-text text-muted">URL de l'image de la recette (optionnel)</small>
+                    </div>
+
+                    <!-- Boutons -->
+                    <div class="d-flex gap-2 justify-content-end">
+                        <a href="/admin" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle me-2"></i>Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-<%= action === 'add' ? 'check-circle' : 'save' %> me-2"></i>
+                            <%= action === 'add' ? 'Ajouter' : 'Enregistrer' %> la recette
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-light py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <div class="mb-3">
+                        <a href="/mentions" class="text-decoration-none text-muted me-4">Mentions légales</a>
+                        <a href="/contact" class="text-decoration-none text-muted me-4">Contact</a>
+                        <a href="/aide" class="text-decoration-none text-muted">Aide</a>
+                    </div>
+                    <p class="text-muted mb-0">© 2024 Super Recipe Roulette. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

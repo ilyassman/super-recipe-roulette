@@ -31,9 +31,15 @@
                     </a>
                 </li>
                 <li class="nav-item ms-3">
-                    <% if (typeof logged !== 'undefined' && logged) { %><a class="nav-link" href="/profil" title="Profil">
-                        <i class="bi bi-person-circle fs-4 text-primary"></i>
-                    </a>
+                    <% if (typeof logged !== 'undefined' && logged) { %>
+                        <% if (typeof userRole !== 'undefined' && userRole === 'admin') { %>
+                            <a class="nav-link me-3" href="/admin" title="Administration">
+                                <i class="bi bi-shield-lock fs-5 text-danger"></i>
+                            </a>
+                        <% } %>
+                        <a class="nav-link" href="/profil" title="Profil">
+                            <i class="bi bi-person-circle fs-4 text-primary"></i>
+                        </a>
                     <% } else { %>
                         <a class="btn btn-primary btn-sm px-3" href="/login">
                             <i class="bi bi-box-arrow-in-right me-2"></i>Login
