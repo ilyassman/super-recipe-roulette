@@ -47,17 +47,19 @@
                 <!-- Liste des favoris (statique pour l'instant) -->
                 <div class="favoris-list">
                     <!-- Favori 1 -->
+                     <%if (favorites.length > 0) { %>
+                     <% favorites.forEach((favorite) => { %>
                     <div class="favori-card">
                         <div class="favori-image">
-                            <img src="/assets/img/poulet_roi.jpg" alt="Poulet rôti au citron et herbes">
+                            <img src="/assets/img/<%= favorite.image %>" alt="Poulet rôti au citron et herbes">
                         </div>
                         <div class="favori-content">
-                            <h3 class="favori-title">Poulet rôti au citron et herbes</h3>
-                            <p class="favori-description">Un délicieux poulet rôti parfumé au citron et aux herbes fraîches.</p>
+                            <h3 class="favori-title"><%= favorite.titre %></h3>
+                            <p class="favori-description"><%= favorite.description %></p>
                             <div class="favori-badges">
-                                <span class="badge-categorie">Plat Principal</span>
-                                <span class="badge-temps"><i class="bi bi-clock"></i> 90 min</span>
-                                <span class="badge-difficulte">Facile</span>
+                                <span class="badge-categorie"><%= favorite.categorie %></span>
+                                <span class="badge-temps"><i class="bi bi-clock"></i> <%= favorite.temps_preparation %> min</span>
+                                <span class="badge-difficulte"><%= favorite.difficulte %></span>
                             </div>
                             <a href="/recette/1/details" class="btn-view-recipe">
                                 Voir la recette <i class="bi bi-arrow-right"></i>
@@ -67,54 +69,13 @@
                             <i class="bi bi-heart-fill"></i>
                         </button>
                     </div>
+                    <% }); %>
+                    <% } else { %>
 
-                    <!-- Favori 2 -->
-                    <div class="favori-card">
-                        <div class="favori-image">
-                            <img src="/assets/img/tarte_pommes.jpg" alt="Tarte aux pommes rustique">
-                        </div>
-                        <div class="favori-content">
-                            <h3 class="favori-title">Tarte aux pommes rustique</h3>
-                            <p class="favori-description">Une tarte aux pommes traditionnelle avec une pâte rustique et des pommes caramélisées.</p>
-                            <div class="favori-badges">
-                                <span class="badge-categorie">Dessert</span>
-                                <span class="badge-temps"><i class="bi bi-clock"></i> 60 min</span>
-                                <span class="badge-difficulte">Facile</span>
-                            </div>
-                            <a href="/recette/3/details" class="btn-view-recipe">
-                                Voir la recette <i class="bi bi-arrow-right"></i>
-                            </a>
-                        </div>
-                        <button class="btn-remove-favori" title="Retirer des favoris">
-                            <i class="bi bi-heart-fill"></i>
-                        </button>
-                    </div>
-
-                    <!-- Favori 3 -->
-                    <div class="favori-card">
-                        <div class="favori-image">
-                            <img src="/assets/img/salade_cesar.jpg" alt="Salade César végétarienne">
-                        </div>
-                        <div class="favori-content">
-                            <h3 class="favori-title">Salade César végétarienne</h3>
-                            <p class="favori-description">Une version végétarienne de la classique salade César avec des protéines végétales.</p>
-                            <div class="favori-badges">
-                                <span class="badge-categorie">Entrée</span>
-                                <span class="badge-temps"><i class="bi bi-clock"></i> 25 min</span>
-                                <span class="badge-difficulte">Moyen</span>
-                            </div>
-                            <a href="/recette/2/details" class="btn-view-recipe">
-                                Voir la recette <i class="bi bi-arrow-right"></i>
-                            </a>
-                        </div>
-                        <button class="btn-remove-favori" title="Retirer des favoris">
-                            <i class="bi bi-heart-fill"></i>
-                        </button>
-                    </div>
-                </div>
-
+                    
+                
                 <!-- Message si aucun favori -->
-                <div class="no-favoris d-none">
+                <div class="no-favoris ">
                     <div class="text-center py-5">
                         <i class="bi bi-heart fs-1 text-muted mb-3"></i>
                         <p class="text-muted">Vous n'avez pas encore de recettes favorites.</p>
@@ -123,6 +84,7 @@
                         </a>
                     </div>
                 </div>
+                <% } %>
             </div>
 
             <!-- Bouton de déconnexion -->

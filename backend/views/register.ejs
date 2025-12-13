@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer un compte - Super Recipe Roulette</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/register.css">
+</head>
+<body>
+    <!-- Header / Navigation -->
+    <%- include('partials/navbar', { activePage: '', logged: false }) %>
+
+    <!-- Main Content -->
+    <main class="register-page">
+        <div class="container">
+            <div class="row justify-content-center align-items-center min-vh-75">
+                <div class="col-md-6 col-lg-5">
+                    <div class="register-card">
+                        <!-- Logo / Icon -->
+                        <div class="register-header">
+                            <div class="register-icon">
+                                <i class="bi bi-person-plus"></i>
+                            </div>
+                            <h1 class="register-title">Créer un compte</h1>
+                            <p class="register-subtitle">Rejoignez-nous pour sauvegarder vos recettes favorites</p>
+                        </div>
+
+                        <!-- Formulaire d'inscription -->
+                        <form id="registerForm" class="register-form">
+                            <!-- Message d'erreur -->
+                            <div id="errorMessage" class="alert alert-danger d-none" role="alert">
+                                <i class="bi bi-exclamation-triangle me-2"></i><span id="errorText"></span>
+                            </div>
+
+                            <!-- Message de succès -->
+                            <div id="successMessage" class="alert alert-success d-none" role="alert">
+                                <i class="bi bi-check-circle me-2"></i><span id="successText"></span>
+                            </div>
+
+                            <!-- Nom -->
+                            <div class="form-group">
+                                <label for="nom" class="form-label">
+                                    <i class="bi bi-person me-2"></i>Nom complet
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="nom" 
+                                    name="nom" 
+                                    placeholder="Votre nom"
+                                    required
+                                    autocomplete="name"
+                                >
+                                <div id="nomError" class="text-danger small mt-1"></div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="form-group">
+                                <label for="email" class="form-label">
+                                    <i class="bi bi-envelope me-2"></i>Email
+                                </label>
+                                <input 
+                                    type="email" 
+                                    class="form-control" 
+                                    id="email" 
+                                    name="email" 
+                                    placeholder="votre@email.com"
+                                    required
+                                    autocomplete="email"
+                                >
+                                <div id="emailError" class="text-danger small mt-1"></div>
+                            </div>
+
+                            <!-- Mot de passe -->
+                            <div class="form-group">
+                                <label for="password" class="form-label">
+                                    <i class="bi bi-lock me-2"></i>Mot de passe
+                                </label>
+                                <div class="password-input-wrapper">
+                                    <input 
+                                        type="password" 
+                                        class="form-control" 
+                                        id="password" 
+                                        name="password" 
+                                        placeholder="••••••••"
+                                        required
+                                        autocomplete="new-password"
+                                        minlength="6"
+                                    >
+                                    <button type="button" class="btn-toggle-password" id="togglePassword">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                                <div id="passwordError" class="text-danger small mt-1"></div>
+                                <small class="form-text text-muted">Minimum 6 caractères</small>
+                            </div>
+
+                            <!-- Confirmation mot de passe -->
+                            <div class="form-group">
+                                <label for="confirmPassword" class="form-label">
+                                    <i class="bi bi-lock-fill me-2"></i>Confirmer le mot de passe
+                                </label>
+                                <div class="password-input-wrapper">
+                                    <input 
+                                        type="password" 
+                                        class="form-control" 
+                                        id="confirmPassword" 
+                                        name="confirmPassword" 
+                                        placeholder="••••••••"
+                                        required
+                                        autocomplete="new-password"
+                                    >
+                                    <button type="button" class="btn-toggle-password" id="toggleConfirmPassword">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                                <div id="confirmPasswordError" class="text-danger small mt-1"></div>
+                            </div>
+
+                            <!-- Bouton d'inscription -->
+                            <button type="submit" class="btn-register" id="btnRegister">
+                                <i class="bi bi-person-plus me-2"></i>Créer mon compte
+                            </button>
+                        </form>
+
+                        <!-- Lien de connexion -->
+                        <div class="register-footer">
+                            <p class="text-center mb-0">
+                                Déjà un compte ? 
+                                <a href="/login" class="login-link">Se connecter</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <%- include('partials/footer') %>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <script>
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        });
+
+        // Toggle confirm password visibility
+        document.getElementById('toggleConfirmPassword').addEventListener('click', function() {
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const icon = this.querySelector('i');
+            
+            if (confirmPasswordInput.type === 'password') {
+                confirmPasswordInput.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                confirmPasswordInput.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        });
+
+        // Validation en temps réel de l'email
+        $(function() {
+            $('#email').keyup(function() {
+                const email = $(this).val().trim();
+                
+                if (email == "") {
+                    $('#emailError').html('');
+                } else {
+                    // Vérifier si l'email existe déjà
+                    $.post("/check-email", "email=" + email, function(data, status, xhr) {
+                        if (status == "error") {
+                            console.error('Erreur:', xhr.status + " " + xhr.statusText);
+                        } else {
+                            if (data == "EXISTS") {
+                                $('#emailError').html('Cet email est déjà utilisé');
+                            } else {
+                                $('#emailError').html('');
+                            }
+                        }
+                    });
+                }
+            });
+
+            // Validation de la confirmation du mot de passe
+            $('#confirmPassword').keyup(function() {
+                const password = $('#password').val();
+                const confirmPassword = $(this).val();
+                
+                if (confirmPassword !== "" && password !== confirmPassword) {
+                    $('#confirmPasswordError').html('Les mots de passe ne correspondent pas');
+                } else {
+                    $('#confirmPasswordError').html('');
+                }
+            });
+
+            // Gestion du formulaire
+            $('#registerForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                // Masquer les messages précédents
+                $('#errorMessage').addClass('d-none');
+                $('#successMessage').addClass('d-none');
+                
+                // Récupérer les valeurs
+                const nom = $('#nom').val().trim();
+                const email = $('#email').val().trim();
+                const password = $('#password').val();
+                const confirmPassword = $('#confirmPassword').val();
+                
+                // Validation côté client
+                let hasError = false;
+                
+                if (nom === "") {
+                    $('#nomError').html('Le nom est requis');
+                    hasError = true;
+                } else {
+                    $('#nomError').html('');
+                }
+                
+                if (email === "") {
+                    $('#emailError').html('L\'email est requis');
+                    hasError = true;
+                } else {
+                    $('#emailError').html('');
+                }
+                
+                if (password.length < 6) {
+                    $('#passwordError').html('Le mot de passe doit contenir au moins 6 caractères');
+                    hasError = true;
+                } else {
+                    $('#passwordError').html('');
+                }
+                
+                if (password !== confirmPassword) {
+                    $('#confirmPasswordError').html('Les mots de passe ne correspondent pas');
+                    hasError = true;
+                } else {
+                    $('#confirmPasswordError').html('');
+                }
+                
+                if (hasError) {
+                    return;
+                }
+                
+                // Désactiver le bouton pendant la requête
+                const $btn = $('#btnRegister');
+                const originalBtnText = $btn.html();
+                $btn.prop('disabled', true);
+                $btn.html('<i class="bi bi-hourglass-split me-2"></i>Inscription en cours...');
+                
+                // Envoyer la requête AJAX
+                $.ajax({
+                    url: '/register',
+                    method: 'POST',
+                    data: {
+                        nom: nom,
+                        email: email,
+                        password: password
+                    },
+                    success: function(response) {
+                        console.log('Réponse du serveur:', response);
+                        
+                        if (response.success) {
+                            // Afficher le message de succès
+                            $('#successText').text(response.message || 'Compte créé avec succès !');
+                            $('#successMessage').removeClass('d-none');
+                            
+                            // Rediriger après un court délai
+                            setTimeout(function() {
+                                window.location.href = response.redirect || '/login';
+                            }, 1500);
+                        } else {
+                            // Afficher le message d'erreur
+                            $('#errorText').text(response.message || 'Erreur lors de l\'inscription.');
+                            $('#errorMessage').removeClass('d-none');
+                            
+                            // Réactiver le bouton
+                            $btn.prop('disabled', false);
+                            $btn.html(originalBtnText);
+                        }
+                    },
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+

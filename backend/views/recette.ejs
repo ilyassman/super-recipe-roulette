@@ -68,9 +68,19 @@
                     <a href="/" class="btn-secondary-action">
                         <i class="bi bi-arrow-repeat"></i> Relancer la Roulette
                     </a>
-                    <button class="btn-favorite" id="btnFavorite">
-                        <i class="bi bi-heart"></i> Ajouter aux favoris
-                    </button>
+                    <% if (logged) { %>
+                        <button class="btn-favorite <%= typeof isFavorite !== 'undefined' && isFavorite ? 'favorited' : '' %>" id="btnFavorite">
+                            <% if (typeof isFavorite !== 'undefined' && isFavorite) { %>
+                                <i class="bi bi-heart-fill"></i> Ajouté aux favoris
+                           <% } else { %>
+                                <i class="bi bi-heart"></i> Ajouter aux favoris
+                            <% } %>
+                        </button>
+                    <% } else { %>
+                        <a href="/login" class="btn-secondary-action">
+                            <i class="bi bi-heart"></i> Ajouter aux favoris
+                        </a>
+                    <% } %>
                 </div>
             </div>
         </div>
@@ -85,19 +95,47 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     
     <script>
-        // Gestion du bouton favori
-        document.getElementById('btnFavorite').addEventListener('click', function() {
-            const icon = this.querySelector('i');
-            if (icon.classList.contains('bi-heart')) {
-                icon.classList.remove('bi-heart');
-                icon.classList.add('bi-heart-fill');
-                this.innerHTML = '<i class="bi bi-heart-fill"></i> Ajouté aux favoris';
-                this.classList.add('favorited');
-            } else {
-                icon.classList.remove('bi-heart-fill');
-                icon.classList.add('bi-heart');
-                this.innerHTML = '<i class="bi bi-heart"></i> Ajouter aux favoris';
-                this.classList.remove('favorited');
+        // Gestion du bouton favori (seulement si connecté)
+        $(document).ready(function() {
+            const btnFavorite = $('#btnFavorite');
+            
+            if (btnFavorite.length > 0) {
+                btnFavorite.on('click', function() {
+                    const recipeId = <%= recipe.id %>;
+                    const $btn = $(this);
+                    const $icon = $btn.find('i');
+                    const isFavorited = $btn.hasClass('favorited');
+                    
+                    console.log('Click sur favori, recipeId:', recipeId, 'isFavorited:', isFavorited);
+                    $btn.prop('disabled', true);
+                    
+                    $.post("/recette/favorite", "id=" + recipeId, function(data, status, xhr) {
+                        $btn.prop('disabled', false);
+                        
+                        if (status == "error") {
+                            console.error('Erreur:', xhr.status + " " + xhr.statusText);
+                            alert('Une erreur est survenue. Veuillez réessayer.');
+                            return;
+                        }
+                        
+                        if (data == "OK") {
+                            // Ajouter aux favoris
+                            $icon.removeClass('bi-heart').addClass('bi-heart-fill');
+                            $btn.html('<i class="bi bi-heart-fill"></i> Ajouté aux favoris');
+                            $btn.addClass('favorited');
+                            console.log("Favori ajouté avec succès");
+                        } else if (data == "REMOVED") {
+                            // Retirer des favoris
+                            $icon.removeClass('bi-heart-fill').addClass('bi-heart');
+                            $btn.html('<i class="bi bi-heart"></i> Ajouter aux favoris');
+                            $btn.removeClass('favorited');
+                            console.log("Favori retiré avec succès");
+                        } else {
+                            console.error('Erreur:', data);
+                            alert('Une erreur est survenue. Veuillez réessayer.');
+                        }
+                    })
+                });
             }
         });
     </script>

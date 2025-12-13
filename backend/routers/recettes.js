@@ -18,11 +18,29 @@ router.get('/:id', (req, res) => {
             db.close();
             return res.redirect('/');
         }
-        
+        var isFavorite = false;
+        if(req.session.loggedin)
+        {
+            db.get('SELECT * FROM favorites WHERE user_id = ? AND recipe_id = ?', [req.session.userId, recipeId], (err, favorite) => {
+                if (err) {
+                    console.error('Erreur lors de la récupération du favori:', err.message);
+                }
+                isFavorite = favorite ? true : false;
+                res.render('recette', {
+                    logged: req.session.loggedin || false,
+                    recipe: recipe,
+                    isFavorite: isFavorite
+                });
+            });
+        }
+        else
         res.render('recette', {
             logged: req.session.loggedin || false,
-            recipe: recipe
+            recipe: recipe,
+            isFavorite: isFavorite
         });
+        
+        
         
         db.close();
     });
@@ -88,6 +106,58 @@ router.get('/:id/details', (req, res) => {
         });
     });
 });
-
+router.post('/favorite', (req, res) => {
+    // Vérifier si l'utilisateur est connecté
+    if (!req.session.loggedin || !req.session.userId) {
+        return res.status(401).send('NOT_LOGGED_IN');
+    }
+    
+    const recipeId = req.body.id;
+    const userId = req.session.userId;
+    const db = getDB();
+    
+    if (!recipeId) {
+        db.close();
+        return res.status(400).send('KO');
+    }
+    
+    // Vérifier si le favori existe déjà
+    db.get('SELECT * FROM favorites WHERE user_id = ? AND recipe_id = ?', 
+        [userId, recipeId], (err, favorite) => {
+        if (err) {
+            console.error('Erreur vérification favori:', err.message);
+            db.close();
+            return res.status(500).send('KO');
+        }
+        
+        if (favorite) {
+            // Le favori existe, le supprimer
+            db.run('DELETE FROM favorites WHERE user_id = ? AND recipe_id = ?', 
+                [userId, recipeId], (err) => {
+                if (err) {
+                    console.error('Erreur suppression favori:', err.message);
+                    db.close();
+                    return res.status(500).send('KO');
+                }
+                
+                db.close();
+                res.status(200).send('REMOVED');
+            });
+        } else {
+            // Le favori n'existe pas, l'ajouter
+            db.run('INSERT INTO favorites (user_id, recipe_id) VALUES (?, ?)', 
+                [userId, recipeId], (err) => {
+                if (err) {
+                    console.error('Erreur ajout favori:', err.message);
+                    db.close();
+                    return res.status(500).send('KO');
+                }
+                
+                db.close();
+                res.status(200).send('OK');
+            });
+        }
+    });
+});
 module.exports = router;
 
