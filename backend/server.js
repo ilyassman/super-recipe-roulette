@@ -20,6 +20,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Routes
 app.use('/', require('./routers/index'));
+app.use('/', require('./routers/recherche'));
 
 // Démarrage du serveur
 app.listen(PORT, () => {
