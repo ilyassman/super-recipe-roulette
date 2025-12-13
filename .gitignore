@@ -1,4 +1,33 @@
 # Dépendances Node.js
 backend/node_modules/
 
+# Fichier de règles (optionnel - à ignorer)
 REGLES_PROJET.md
+
+# Base de données SQLite
+backend/db/*.sqlite
+backend/db/*.sqlite3
+backend/db/*.db
+
+# Fichiers d'environnement
+.env
+.env.local
+
+# Fichiers de logs
+*.log
+npm-debug.log*
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Fichiers de l'éditeur
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Fichiers temporaires
+*.tmp
+*.temp
