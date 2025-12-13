@@ -23,7 +23,7 @@ app.use('/', require('./routers/index'));
 
 app.use('/recette', require('./routers/recettes'));
 app.use('/', require('./routers/auth'));
-
+app.use('/', require('./routers/recherche'));
 
 
 // Démarrage du serveur

@@ -74,6 +74,21 @@ db.serialize(() => {
             console.log('Table recipe_ingredients créée ou déjà existante.');
         }
     });
+     // Table favorites (favoris des utilisateurs)
+     db.run(`CREATE TABLE IF NOT EXISTS favorites (
+        user_id INTEGER NOT NULL,
+        recipe_id INTEGER NOT NULL,
+        date_ajout DATETIME DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (user_id, recipe_id),
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
+    )`, (err) => {
+        if (err) {
+            console.error('Erreur création table favorites:', err.message);
+        } else {
+            console.log('Table favorites créée ou déjà existante.');
+        }
+    });
 
     // Table recipe_instructions
     db.run(`CREATE TABLE IF NOT EXISTS recipe_instructions (
@@ -198,6 +213,7 @@ function insertTestData() {
                         console.log(`Recette "${recipe.titre}" insérée avec ID:`, this.lastID);
                     }
                 });
+
             });
         }
     });
@@ -212,4 +228,5 @@ setTimeout(() => {
         }
     });
 }, 2000);
+
 

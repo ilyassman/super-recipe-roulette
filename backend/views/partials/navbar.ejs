@@ -1,0 +1,47 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <i class="bi bi-list fs-3 me-2 text-primary"></i>
+            <span class="fw-bold fs-4">Super Recipe Roulette</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto d-flex align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'recettes') ? 'active fw-bold' : '' %>" 
+                       href="/recettes"
+                       <% if (typeof activePage !== 'undefined' && activePage === 'recettes') { %>style="border-bottom: 3px solid #ff6b35;"<% } %>>
+                        Recettes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'recherche') ? 'active fw-bold' : '' %>" 
+                       href="/recherche"
+                       <% if (typeof activePage !== 'undefined' && activePage === 'recherche') { %>style="border-bottom: 3px solid #ff6b35;"<% } %>>
+                        Recherche
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <%= (typeof activePage !== 'undefined' && activePage === 'roulette') ? 'active fw-bold' : '' %>" 
+                       href="/"
+                       <% if (typeof activePage !== 'undefined' && activePage === 'roulette') { %>style="border-bottom: 3px solid #ff6b35;"<% } %>>
+                        Roulette
+                    </a>
+                </li>
+                <li class="nav-item ms-3">
+                    <% if (typeof logged !== 'undefined' && logged) { %><a class="nav-link" href="/profil" title="Profil">
+                        <i class="bi bi-person-circle fs-4 text-primary"></i>
+                    </a>
+                    <% } else { %>
+                        <a class="btn btn-primary btn-sm px-3" href="/login">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                        </a>
+                    <% } %>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
