@@ -4,15 +4,162 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Super Recipe Roulette</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
-    <h1>Super Recipe Roulette</h1>
-    <p>Bienvenue sur Super Recipe Roulette !</p>
-    <% if (logged) { %>
-        <p>Vous êtes connecté.</p>
-    <% } else { %>
-        <p>Vous n'êtes pas connecté.</p>
-    <% } %>
+    <!-- Header / Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <i class="bi bi-list fs-3 me-2 text-primary"></i>
+                <span class="fw-bold fs-4">Super Recipe Roulette</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto d-flex align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/recettes">Recettes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/recherche">Recherche</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active fw-bold" href="/roulette" style="border-bottom: 3px solid #ff6b35;">Roulette</a>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <a class="nav-link" href="/profil">
+                            <i class="bi bi-person-circle fs-4"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container my-5">
+        <!-- Roulette Section -->
+        <div class="card shadow-sm border-0 rounded-4 p-5 mb-5" style="background-color: #f8f9fa;">
+            <div class="text-center mb-4">
+                <h1 class="display-4 fw-bold mb-3">Découvrez une recette au hasard!</h1>
+                <p class="lead text-muted">Trouvez des idées de repas nouvelles et excitantes instantanément grâce à notre roulette de recettes.</p>
+            </div>
+            
+            <!-- Roulette Wheel -->
+            <div class="d-flex justify-content-center my-5">
+                <div class="roulette-container position-relative">
+                    <div class="roulette-wheel">
+                        <div class="roulette-center">
+                            <i class="bi bi-fork-knife text-danger fs-1"></i>
+                        </div>
+                    </div>
+                    <div class="roulette-pointer"></div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <button class="btn btn-lg px-5 py-3 rounded-pill fw-bold" style="background-color: #ff6b35; color: white; border: none;">
+                    <i class="bi bi-shuffle me-2"></i>Lancer la Roulette
+                </button>
+                <button class="btn btn-lg px-5 py-3 rounded-pill fw-bold" style="background-color: #ffe5d9; color: #ff6b35; border: 2px solid #ff6b35;">
+                    Recherche filtrée
+                </button>
+            </div>
+        </div>
+
+        <!-- Recettes du jour Section -->
+        <div class="mb-5">
+            <h2 class="fw-bold mb-4">Recettes du jour</h2>
+            <% if (recipes && recipes.length > 0) { %>
+                <div class="row g-4">
+                    <% recipes.forEach((recipe, index) => { %>
+                        <div class="col-md-4">
+                            <div class="card shadow-sm border-0 rounded-4 h-100 overflow-hidden">
+                                <div class="card-img-top" style="height: 200px; background: linear-gradient(135deg, #8B4513 0%, #654321 100%); position: relative;">
+                                    <div class="position-absolute top-50 start-50 translate-middle text-white text-center">
+                                        <% 
+                                            // Icône selon la catégorie
+                                            let icon = 'bi-egg-fried';
+                                            let bgColor = '#8B4513';
+                                            if (recipe.categorie === 'entree') {
+                                                icon = 'bi-flower1';
+                                                bgColor = '#E8E8E8';
+                                            } else if (recipe.categorie === 'dessert') {
+                                                icon = 'bi-apple';
+                                                bgColor = '#8B4513';
+                                            } else if (recipe.categorie === 'plat') {
+                                                icon = 'bi-egg-fried';
+                                                bgColor = '#8B4513';
+                                            }
+                                        %>
+                                        <i class="bi <%= icon %> fs-1"></i>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold"><%= recipe.titre %></h5>
+                                    <p class="card-text text-muted small"><%= recipe.description || '' %></p>
+                                    <div class="d-flex gap-3 mt-3 flex-wrap">
+                                        <% 
+                                            // Badge de difficulté
+                                            let badgeClass = 'bg-success';
+                                            if (recipe.difficulte === 'Moyen') {
+                                                badgeClass = 'bg-warning text-dark';
+                                            } else if (recipe.difficulte === 'Difficile') {
+                                                badgeClass = 'bg-danger';
+                                            }
+                                        %>
+                                        <span class="badge <%= badgeClass %>">
+                                            <i class="bi bi-check-circle me-1"></i><%= recipe.difficulte || 'Facile' %>
+                                        </span>
+                                        <span class="badge bg-secondary">
+                                            <i class="bi bi-people me-1"></i><%= recipe.portions_defaut || 4 %> pers.
+                                        </span>
+                                        <% if (recipe.temps_preparation) { %>
+                                            <span class="badge bg-info">
+                                                <i class="bi bi-clock me-1"></i><%= recipe.temps_preparation %> min
+                                            </span>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } else { %>
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>Aucune recette disponible pour le moment.
+                </div>
+            <% } %>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-light py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <div class="mb-3">
+                        <a href="/mentions" class="text-decoration-none text-muted me-4">Mentions légales</a>
+                        <a href="/contact" class="text-decoration-none text-muted me-4">Contact</a>
+                        <a href="/aide" class="text-decoration-none text-muted">Aide</a>
+                    </div>
+                    <p class="text-muted mb-0">© 2024 Super Recipe Roulette. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </body>
 </html>
-
