@@ -7,22 +7,32 @@ router.get('/', (req, res) => {
     const db = getDB();
     
     // Récupérer les 3 premières recettes pour "Recettes du jour"
-    db.all('SELECT * FROM recipes ORDER BY date_creation DESC LIMIT 3', (err, recipes) => {
+    db.all('SELECT * FROM recipes ORDER BY random() LIMIT 3', (err, recipes) => {
         if (err) {
             console.error('Erreur lors de la récupération des recettes:', err.message);
             res.render('index', { 
                 logged: req.session.loggedin || false,
-                recipes: []
+                recipes: [],
+                rouletteRecipes: []
             });
         } else {
-            res.render('index', { 
-                logged: req.session.loggedin || false,
-                recipes: recipes || []
+            // Récupérer 5 recettes aléatoires pour la roulette
+            db.all('SELECT * FROM recipes ORDER BY random() LIMIT 5', (err, rouletteRecipes) => {
+                if (err) {
+                    console.error('Erreur lors de la récupération des recettes roulette:', err.message);
+                    rouletteRecipes = [];
+                }
+                
+                res.render('index', { 
+                    logged: req.session.loggedin || false,
+                    recipes: recipes || [],
+                    rouletteRecipes: rouletteRecipes || []
+                });
+                
+                // Fermer la connexion
+                db.close();
             });
         }
-        
-        // Fermer la connexion
-        db.close();
     });
 });
 

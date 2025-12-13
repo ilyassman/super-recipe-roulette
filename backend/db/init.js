@@ -74,6 +74,21 @@ db.serialize(() => {
             console.log('Table recipe_ingredients créée ou déjà existante.');
         }
     });
+
+    // Table recipe_instructions
+    db.run(`CREATE TABLE IF NOT EXISTS recipe_instructions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        recipe_id INTEGER NOT NULL,
+        numero_etape INTEGER NOT NULL,
+        description TEXT NOT NULL,
+        FOREIGN KEY (recipe_id) REFERENCES recipes(id)
+    )`, (err) => {
+        if (err) {
+            console.error('Erreur création table recipe_instructions:', err.message);
+        } else {
+            console.log('Table recipe_instructions créée ou déjà existante.');
+        }
+    });
     // Vérifier si des recettes existent déjà
     db.get('SELECT COUNT(*) as count FROM recipes', (err, row) => {
         if (err) {
@@ -120,7 +135,6 @@ function insertTestData() {
                     difficulte: 'Moyen',
                     image: 'salade_cesar.jpg',
                     portions_defaut: 2,
-                   
                 },
                 {
                     titre: 'Tarte aux pommes rustique',
@@ -129,8 +143,48 @@ function insertTestData() {
                     temps_preparation: 60,
                     difficulte: 'Facile',
                     portions_defaut: 8,
-                    image: 'tarte_pommes.jpg'                }
+                    image: 'tarte_pommes.jpg'
+                },
+            
+                // ➕ Nouvelles recettes
+                {
+                    titre: 'Spaghetti à la carbonara',
+                    description: 'Des spaghetti crémeux à la carbonara avec œufs, fromage et lardons.',
+                    categorie: 'plat',
+                    temps_preparation: 30,
+                    difficulte: 'Moyen',
+                    image: 'carbonara.jpg',
+                    portions_defaut: 2,
+                },
+                {
+                    titre: 'Velouté de potiron',
+                    description: 'Un velouté onctueux de potiron relevé d’une pointe de muscade.',
+                    categorie: 'entree',
+                    temps_preparation: 40,
+                    difficulte: 'Facile',
+                    image: 'veloute_potiron.jpg',
+                    portions_defaut: 4,
+                },
+                {
+                    titre: 'Brownies au chocolat',
+                    description: 'Des brownies fondants au chocolat noir et aux noix.',
+                    categorie: 'dessert',
+                    temps_preparation: 45,
+                    difficulte: 'Facile',
+                    image: 'brownies_chocolat.jpg',
+                    portions_defaut: 6,
+                },
+                {
+                    titre: 'Omelette aux champignons',
+                    description: 'Une omelette moelleuse aux champignons frais et aux herbes.',
+                    categorie: 'plat',
+                    temps_preparation: 15,
+                    difficulte: 'Facile',
+                    image: 'omelette_champignons.jpg',
+                    portions_defaut: 1,
+                }
             ];
+            
 
             recipes.forEach((recipe, index) => {
                 db.run(`INSERT INTO recipes (titre, description, categorie, temps_preparation, difficulte, portions_defaut, image)

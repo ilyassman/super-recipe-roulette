@@ -5,57 +5,40 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* Roulette Wheel Styles */
-.roulette-container {
-    width: 350px;
-    height: 350px;
+/* Roulette Wheel Container */
+.wheel-container {
+    width: 550px;
+    height: 550px;
     position: relative;
+    filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.2));
 }
 
-.roulette-wheel {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    background: conic-gradient(
-        #4A90E2 0deg 60deg,
-        #E74C3C 60deg 120deg,
-        #2ECC71 120deg 180deg,
-        #F39C12 180deg 240deg,
-        #E91E63 240deg 300deg,
-        #3498DB 300deg 360deg
-    );
-}
-
-.roulette-center {
+/* Pointeur de la roulette */
+.wheel-pointer {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80px;
-    height: 80px;
-    background-color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    z-index: 10;
-}
-
-.roulette-pointer {
-    position: absolute;
-    top: -10px;
+    top: -8px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 15px solid transparent;
-    border-right: 15px solid transparent;
-    border-top: 30px solid #ff6b35;
+    border-left: 18px solid transparent;
+    border-right: 18px solid transparent;
+    border-top: 35px solid #ff6b35;
     z-index: 20;
+    filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.3));
+}
+
+/* Animation du pointeur au survol */
+.wheel-pointer::after {
+    content: '';
+    position: absolute;
+    top: -35px;
+    left: -12px;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 24px solid #ff8c5a;
 }
 
 /* Navbar active link */
@@ -65,18 +48,51 @@ body {
 
 /* Card hover effect */
 .card {
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* Button hover effects */
+/* Button styles */
+.btn {
+    transition: all 0.3s ease;
+}
+
 .btn:hover {
-    opacity: 0.9;
     transform: scale(1.05);
-    transition: all 0.2s;
 }
 
+/* Button disabled state */
+.btn:disabled {
+    opacity: 0.6;
+    transform: none !important;
+}
+
+/* Section roulette background */
+.roulette-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+/* Responsive wheel */
+@media (max-width: 576px) {
+    .wheel-container {
+        width: 320px;
+        height: 320px;
+    }
+    
+    .wheel-pointer {
+        border-left: 14px solid transparent;
+        border-right: 14px solid transparent;
+        border-top: 28px solid #ff6b35;
+    }
+}
+
+@media (max-width: 480px) {
+    .wheel-container {
+        width: 280px;
+        height: 280px;
+    }
+}

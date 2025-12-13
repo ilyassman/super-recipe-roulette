@@ -31,7 +31,7 @@
                         <a class="nav-link" href="/recherche">Recherche</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active fw-bold" href="/roulette" style="border-bottom: 3px solid #ff6b35;">Roulette</a>
+                        <a class="nav-link active fw-bold" href="/" style="border-bottom: 3px solid #ff6b35;">Roulette</a>
                     </li>
                     <li class="nav-item ms-3">
                         <a class="nav-link" href="/profil">
@@ -52,21 +52,17 @@
                 <p class="lead text-muted">Trouvez des idées de repas nouvelles et excitantes instantanément grâce à notre roulette de recettes.</p>
             </div>
             
-            <!-- Roulette Wheel -->
+            <!-- Roulette Wheel avec spin-wheel -->
             <div class="d-flex justify-content-center my-5">
-                <div class="roulette-container position-relative">
-                    <div class="roulette-wheel">
-                        <div class="roulette-center">
-                            <i class="bi bi-fork-knife text-danger fs-1"></i>
-                        </div>
-                    </div>
-                    <div class="roulette-pointer"></div>
+                <div class="position-relative">
+                    <div class="wheel-container" id="wheelContainer"></div>
+                    <div class="wheel-pointer"></div>
                 </div>
             </div>
 
             <!-- Action Buttons -->
             <div class="d-flex justify-content-center gap-3 flex-wrap">
-                <button class="btn btn-lg px-5 py-3 rounded-pill fw-bold" style="background-color: #ff6b35; color: white; border: none;">
+                <button id="btnLancerRoulette" class="btn btn-lg px-5 py-3 rounded-pill fw-bold" style="background-color: #ff6b35; color: white; border: none;">
                     <i class="bi bi-shuffle me-2"></i>Lancer la Roulette
                 </button>
                 <button class="btn btn-lg px-5 py-3 rounded-pill fw-bold" style="background-color: #ffe5d9; color: #ff6b35; border: 2px solid #ff6b35;">
@@ -83,26 +79,18 @@
                     <% recipes.forEach((recipe, index) => { %>
                         <div class="col-md-4">
                             <div class="card shadow-sm border-0 rounded-4 h-100 overflow-hidden">
-                                <div class="card-img-top" style="height: 200px; background: linear-gradient(135deg, #8B4513 0%, #654321 100%); position: relative;">
-                                    <div class="position-absolute top-50 start-50 translate-middle text-white text-center">
-                                        <% 
-                                            // Icône selon la catégorie
-                                            let icon = 'bi-egg-fried';
-                                            let bgColor = '#8B4513';
-                                            if (recipe.categorie === 'entree') {
-                                                icon = 'bi-flower1';
-                                                bgColor = '#E8E8E8';
-                                            } else if (recipe.categorie === 'dessert') {
-                                                icon = 'bi-apple';
-                                                bgColor = '#8B4513';
-                                            } else if (recipe.categorie === 'plat') {
-                                                icon = 'bi-egg-fried';
-                                                bgColor = '#8B4513';
-                                            }
-                                        %>
-                                        <i class="bi <%= icon %> fs-1"></i>
-                                    </div>
-                                </div>
+                                <div class="card-img-top" 
+                                style="height: 200px; 
+                                       overflow: hidden; /* **NOUVEAU :** Masque tout ce qui dépasse. */
+                                       background: linear-gradient(135deg, #8B4513 0%, #654321 100%);">
+                               
+                               <img src="/assets/img/<%= recipe.image %>" alt="<%= recipe.titre %>" 
+                                    style="width: 100%; 
+                                           height: 100%; 
+                                           object-fit: cover; /* Assure que l'image couvre entièrement la zone */
+                                           border-radius: inherit;" 
+                                    class="img-fluid">
+                           </div>
                                 <div class="card-body">
                                     <h5 class="card-title fw-bold"><%= recipe.titre %></h5>
                                     <p class="card-text text-muted small"><%= recipe.description || '' %></p>
@@ -161,5 +149,109 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Spin Wheel Library -->
+    <script src="https://cdn.jsdelivr.net/npm/spin-wheel@5.0.2/dist/spin-wheel-iife.js"></script>
+    
+    <!-- Script Roulette -->
+    <script>
+        // Données des recettes depuis le serveur
+        const rouletteRecipes = <%- JSON.stringify(rouletteRecipes || []) %>;
+        
+        // Couleurs modernes et appétissantes pour les segments
+        const segmentColors = [
+            '#FF6B6B',  // Rouge corail
+            '#4ECDC4',  // Turquoise
+            '#FFE66D',  // Jaune doré
+            '#95E1D3',  // Vert menthe
+            '#F38181',  // Rose saumon
+            '#AA96DA',  // Lavande
+            '#FCBAD3',  // Rose pastel
+            '#A8D8EA'   // Bleu ciel
+        ];
+        
+        let wheel = null;
+        let isSpinning = false;
+        
+        // Initialisation de la roulette
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('wheelContainer');
+            
+            if (!container || rouletteRecipes.length === 0) {
+                console.log('Pas de recettes ou container non trouvé');
+                return;
+            }
+            
+            // Créer les items pour la roulette
+            const items = rouletteRecipes.map((recipe, index) => {
+                // Garder un nom court pour un texte plus grand
+                let label = recipe.titre.split(' ')[0]; // Premier mot seulement
+                return {
+                    label: label,
+                    backgroundColor: segmentColors[index % segmentColors.length]
+                };
+            });
+            
+            // Configuration de la roulette - selon documentation spin-wheel
+            const props = {
+                items: items,
+                itemLabelRadius: 0.92,
+                itemLabelRadiusMax: 0.6,
+                itemLabelRotation: 0,
+                itemLabelAlign: 'right',
+                itemLabelColors: ['#000000'],
+                itemLabelBaselineOffset: -0.13,
+                itemLabelFont: 'Arial',
+                itemBackgroundColors: segmentColors,
+                rotationSpeedMax: 400,
+                rotationResistance: -50,
+                lineWidth: 2,
+                lineColor: '#ffffff',
+                overlayImage: null,
+                pointerAngle: 0,
+                borderColor: '#ffffff',
+                borderWidth: 4,
+                isInteractive: false,
+                radius: 0.95,
+                // Événement quand la roulette s'arrête
+                onRest: function(event) {
+                    // Récupérer l'index de la recette sur laquelle la roulette s'est arrêtée
+                    const winningIndex = event.currentIndex;
+                    const winningRecipe = rouletteRecipes[winningIndex];
+                    
+                    // Rediriger vers la page de la recette
+                    window.location.href = `/recette/${winningRecipe.id}`;
+                }
+            };
+            
+            // Créer la roulette
+            wheel = new spinWheel.Wheel(container, props);
+            
+            // Événement sur le bouton
+            const btn = document.getElementById('btnLancerRoulette');
+            if (btn) {
+                btn.addEventListener('click', spinTheWheel);
+            }
+        });
+        
+        // Fonction pour faire tourner la roulette
+        function spinTheWheel() {
+            if (isSpinning || !wheel || rouletteRecipes.length === 0) return;
+            
+            isSpinning = true;
+            const btn = document.getElementById('btnLancerRoulette');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>En cours...';
+            
+            // Choisir une recette aléatoirement
+            const selectedIndex = Math.floor(Math.random() * rouletteRecipes.length);
+            
+            // Durée de l'animation
+            const duration = 4000;
+            
+            // Faire tourner vers l'item sélectionné
+            // La redirection se fera dans l'événement onRest
+            wheel.spinToItem(selectedIndex, duration, true, 3, 1);
+        }
+    </script>
 </body>
 </html>

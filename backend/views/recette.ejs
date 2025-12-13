@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= recipe.titre %> - Super Recipe Roulette</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/recette.css">
+</head>
+<body>
+    <!-- Header / Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <i class="bi bi-list fs-3 me-2 text-primary"></i>
+                <span class="fw-bold fs-4">Super Recipe Roulette</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto d-flex align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/recettes">Recettes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/recherche">Recherche</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Roulette</a>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <a class="nav-link" href="/profil">
+                            <i class="bi bi-person-circle fs-4"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="recipe-page">
+        <div class="container py-5">
+            <!-- Titre avec emojis -->
+            <div class="text-center mb-4">
+                <h1 class="recipe-title">
+                    <span class="emoji">🎯</span> Voici votre recette ! <span class="emoji">🎉</span>
+                </h1>
+            </div>
+
+            <!-- Carte de la recette -->
+            <div class="recipe-card mx-auto">
+                <!-- Image de la recette -->
+                <div class="recipe-image-container">
+                    <% if (recipe.image) { %>
+                        <img src="/assets/img/<%= recipe.image %>" alt="<%= recipe.titre %>" class="recipe-image">
+                    <% } else { %>
+                        <div class="recipe-image-placeholder">
+                            <i class="bi bi-image fs-1"></i>
+                        </div>
+                    <% } %>
+                </div>
+
+                <!-- Badges d'information -->
+                <div class="recipe-badges">
+                    <span class="badge-item">
+                        <i class="bi bi-tag"></i> <%= recipe.categorie === 'plat' ? 'Plat Principal' : recipe.categorie === 'entree' ? 'Entrée' : recipe.categorie === 'dessert' ? 'Dessert' : recipe.categorie %>
+                    </span>
+                    <span class="badge-item">
+                        <i class="bi bi-clock"></i> <%= recipe.temps_preparation || 30 %> min
+                    </span>
+                    <span class="badge-item">
+                        <i class="bi bi-bar-chart"></i> <%= recipe.difficulte || 'Facile' %>
+                    </span>
+                </div>
+
+                <!-- Titre de la recette -->
+                <h2 class="recipe-name"><%= recipe.titre %></h2>
+
+                <!-- Description -->
+                <% if (recipe.description) { %>
+                    <p class="recipe-description"><%= recipe.description %></p>
+                <% } %>
+
+                <!-- Boutons d'action -->
+                <div class="recipe-actions">
+                    <a href="/recette/<%= recipe.id %>/details" class="btn-primary-action">
+                        Voir la recette complète <i class="bi bi-arrow-right"></i>
+                    </a>
+                    <a href="/" class="btn-secondary-action">
+                        <i class="bi bi-arrow-repeat"></i> Relancer la Roulette
+                    </a>
+                    <button class="btn-favorite" id="btnFavorite">
+                        <i class="bi bi-heart"></i> Ajouter aux favoris
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-light py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <div class="mb-3">
+                        <a href="/mentions" class="text-decoration-none text-muted me-4">Mentions légales</a>
+                        <a href="/contact" class="text-decoration-none text-muted me-4">Contact</a>
+                        <a href="/aide" class="text-decoration-none text-muted">Aide</a>
+                    </div>
+                    <p class="text-muted mb-0">© 2024 Super Recipe Roulette. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <script>
+        // Gestion du bouton favori
+        document.getElementById('btnFavorite').addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('bi-heart')) {
+                icon.classList.remove('bi-heart');
+                icon.classList.add('bi-heart-fill');
+                this.innerHTML = '<i class="bi bi-heart-fill"></i> Ajouté aux favoris';
+                this.classList.add('favorited');
+            } else {
+                icon.classList.remove('bi-heart-fill');
+                icon.classList.add('bi-heart');
+                this.innerHTML = '<i class="bi bi-heart"></i> Ajouter aux favoris';
+                this.classList.remove('favorited');
+            }
+        });
+    </script>
+</body>
+</html>
+

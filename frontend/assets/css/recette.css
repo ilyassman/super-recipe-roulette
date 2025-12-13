@@ -1,0 +1,219 @@
+/* Styles pour la page de recette choisie */
+
+.recipe-page {
+    background: linear-gradient(135deg, #fef9f3 0%, #fff5eb 100%);
+    min-height: calc(100vh - 200px);
+}
+
+/* Titre principal */
+.recipe-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.recipe-title .emoji {
+    font-size: 2rem;
+}
+
+/* Carte de la recette */
+.recipe-card {
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    max-width: 600px;
+    overflow: hidden;
+    padding: 0;
+}
+
+/* Image de la recette */
+.recipe-image-container {
+    width: 100%;
+    height: 320px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.recipe-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.recipe-card:hover .recipe-image {
+    transform: scale(1.02);
+}
+
+.recipe-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    color: #adb5bd;
+}
+
+/* Badges d'information */
+.recipe-badges {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px 24px 0;
+    flex-wrap: wrap;
+}
+
+.badge-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    color: #495057;
+    font-weight: 500;
+}
+
+.badge-item i {
+    color: #ff6b35;
+}
+
+/* Nom de la recette */
+.recipe-name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #2c3e50;
+    text-align: center;
+    padding: 20px 24px 10px;
+    margin: 0;
+}
+
+/* Description */
+.recipe-description {
+    text-align: center;
+    color: #6c757d;
+    padding: 0 24px 20px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Boutons d'action */
+.recipe-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px 24px 30px;
+}
+
+.btn-primary-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary-action:hover {
+    background: linear-gradient(135deg, #e55a2b 0%, #ff7a45 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+}
+
+.btn-secondary-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: transparent;
+    color: #ff6b35;
+    padding: 14px 24px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid #ff6b35;
+    cursor: pointer;
+}
+
+.btn-secondary-action:hover {
+    background: #fff5eb;
+    color: #ff6b35;
+    transform: translateY(-2px);
+}
+
+.btn-favorite {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: transparent;
+    color: #6c757d;
+    padding: 12px 24px;
+    border: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-favorite:hover {
+    color: #e74c3c;
+}
+
+.btn-favorite.favorited {
+    color: #e74c3c;
+}
+
+.btn-favorite i {
+    font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .recipe-title {
+        font-size: 1.8rem;
+    }
+    
+    .recipe-title .emoji {
+        font-size: 1.5rem;
+    }
+    
+    .recipe-card {
+        margin: 0 15px;
+        border-radius: 20px;
+    }
+    
+    .recipe-image-container {
+        height: 250px;
+    }
+    
+    .recipe-name {
+        font-size: 1.4rem;
+    }
+    
+    .recipe-badges {
+        gap: 8px;
+    }
+    
+    .badge-item {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+}
+

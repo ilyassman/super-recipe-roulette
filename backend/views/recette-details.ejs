@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= recipe.titre %> - Super Recipe Roulette</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/recette-details.css">
+</head>
+<body>
+    <!-- Header / Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <i class="bi bi-list fs-3 me-2 text-primary"></i>
+                <span class="fw-bold fs-4">Super Recipe Roulette</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto d-flex align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/recettes">Recettes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/recherche">Recherche</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Roulette</a>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <a class="nav-link" href="/profil">
+                            <i class="bi bi-person-circle fs-4"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="recipe-details-page">
+        <div class="container py-5">
+            <!-- Titre de la recette -->
+            <h1 class="recipe-main-title"><%= recipe.titre %></h1>
+
+            <!-- Badges d'information -->
+            <div class="recipe-info-badges">
+                <div class="info-badge">
+                    <span class="info-value">Chef Admin</span>
+                    <span class="info-label">Auteur</span>
+                </div>
+                <div class="info-badge">
+                    <span class="info-value"><%= recipe.categorie === 'plat' ? 'Plat Principal' : recipe.categorie === 'entree' ? 'Entrée' : recipe.categorie === 'dessert' ? 'Dessert' : recipe.categorie %></span>
+                    <span class="info-label">Catégorie</span>
+                </div>
+                <div class="info-badge">
+                    <span class="info-value"><%= recipe.temps_preparation || 30 %> min</span>
+                    <span class="info-label">Temps Total</span>
+                </div>
+                <div class="info-badge">
+                    <span class="info-value"><%= recipe.difficulte || 'Facile' %></span>
+                    <span class="info-label">Difficulté</span>
+                </div>
+            </div>
+
+            <!-- Image de la recette -->
+            <div class="recipe-main-image">
+                <% if (recipe.image) { %>
+                    <img src="/assets/img/<%= recipe.image %>" alt="<%= recipe.titre %>">
+                <% } else { %>
+                    <div class="image-placeholder">
+                        <i class="bi bi-image fs-1"></i>
+                    </div>
+                <% } %>
+            </div>
+
+            <!-- Contenu principal : Ingrédients + Instructions -->
+            <% if ((ingredients && ingredients.length > 0) || (instructions && instructions.length > 0)) { %>
+            <div class="recipe-content">
+                <% if (ingredients && ingredients.length > 0) { %>
+                <!-- Colonne gauche : Ingrédients -->
+                <div class="recipe-ingredients-section">
+                      <!-- Portions -->
+                      <div class="portions-control">
+                        <i class="bi bi-people"></i>
+                        <span>Portions</span>
+                        <div class="portions-buttons">
+                           
+                            <span class="portions-count" id="portionsCount"><%= recipe.portions_defaut || 4 %></span>
+                            
+                        </div>
+                    </div>
+
+                    <!-- Liste des ingrédients -->
+                    <h3 class="section-title">Ingrédients</h3>
+                    <ul class="ingredients-list">
+                        <% ingredients.forEach(ing => { %>
+                            <li class="ingredient-item">
+                                <span class="ingredient-name"><%= ing.nom %></span>
+                                <span class="ingredient-quantity"><%= ing.quantite %> <%= ing.unite %></span>
+                            </li>
+                        <% }); %>
+                    </ul>
+                </div>
+                <% } %>
+
+                <% if (instructions && instructions.length > 0) { %>
+                <!-- Colonne droite : Instructions -->
+                <div class="recipe-instructions-section">
+                    <h3 class="section-title">Instructions</h3>
+                    <ol class="instructions-list">
+                        <% instructions.forEach(step => { %>
+                            <li class="instruction-step">
+                                <span class="step-number"><%= step.numero_etape %></span>
+                                <p class="step-text"><%= step.description %></p>
+                            </li>
+                        <% }); %>
+                    </ol>
+                </div>
+                <% } %>
+            </div>
+            <% } %>
+            
+            <!-- Description de la recette si pas d'ingrédients/instructions -->
+            <% if ((!ingredients || ingredients.length === 0) && (!instructions || instructions.length === 0)) { %>
+            <div class="recipe-description-box">
+                <% if (recipe.description) { %>
+                    <p class="recipe-full-description"><%= recipe.description %></p>
+                <% } else { %>
+                    <p class="no-details-message">
+                        <i class="bi bi-info-circle"></i> 
+                        Les détails de cette recette ne sont pas encore disponibles.
+                    </p>
+                <% } %>
+            </div>
+            <% } %>
+
+            <!-- Section : Vous pourriez aussi aimer -->
+            <% if (suggestions && suggestions.length > 0) { %>
+            <div class="suggestions-section">
+                <h3 class="section-title">Vous pourriez aussi aimer</h3>
+                <div class="suggestions-grid">
+                    <% suggestions.forEach(sugg => { %>
+                        <a href="/recette/<%= sugg.id %>/details" class="suggestion-card">
+                            <div class="suggestion-image">
+                                <% if (sugg.image) { %>
+                                    <img src="/assets/img/<%= sugg.image %>" alt="<%= sugg.titre %>">
+                                <% } else { %>
+                                    <div class="image-placeholder-small">
+                                        <i class="bi bi-image"></i>
+                                    </div>
+                                <% } %>
+                            </div>
+                            <h4 class="suggestion-title"><%= sugg.titre %></h4>
+                            <p class="suggestion-description"><%= sugg.description ? sugg.description.substring(0, 60) + '...' : '' %></p>
+                        </a>
+                    <% }); %>
+                </div>
+            </div>
+            <% } %>
+
+            <!-- Bouton retour -->
+            <div class="text-center mt-5">
+                <a href="/" class="btn-back">
+                    <i class="bi bi-arrow-left me-2"></i>Retour à la roulette
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-light py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <div class="mb-3">
+                        <a href="/mentions" class="text-decoration-none text-muted me-4">Mentions légales</a>
+                        <a href="/contact" class="text-decoration-none text-muted me-4">Contact</a>
+                        <a href="/aide" class="text-decoration-none text-muted">Aide</a>
+                    </div>
+                    <p class="text-muted mb-0">© 2024 Super Recipe Roulette. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</body>
+</html>
+
