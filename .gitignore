@@ -1,6 +1,6 @@
 # Dépendances Node.js
 backend/node_modules/
-
+frontend/assets/img/
 # Fichier de règles (optionnel - à ignorer)
 REGLES_PROJET.md
 

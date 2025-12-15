@@ -163,7 +163,7 @@ $(document).ready(function() {
             
             html += `
                 <div class="col-md-4">
-                    <a href="/recette/${recipe.id}/details" class="text-decoration-none" style="color: inherit;">
+                    <a href="/recette/${recipe.id}/" class="text-decoration-none" style="color: inherit;">
                         <div class="card shadow-sm border-0 rounded-4 h-100 overflow-hidden recipe-card" style="cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)'">
                             <div class="card-img-top position-relative" style="height: 200px; background: linear-gradient(135deg, #8B4513 0%, #654321 100%); overflow: hidden;">
                                 ${specialBadge}
