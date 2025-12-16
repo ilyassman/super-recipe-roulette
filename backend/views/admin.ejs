@@ -172,9 +172,9 @@
                                             <td class="text-end">
                                                 <div class="admin-action-buttons">
                                                     <button type="button" 
-                                                            class="btn btn-sm admin-action-btn admin-action-btn-edit" 
+                                                            class="btn btn-sm admin-action-btn admin-action-btn-edit js-open-edit-modal" 
                                                             title="Modifier"
-                                                            onclick="openEditModal(<%= recipe.id %>)">
+                                                            data-recipe-id="<%= recipe.id %>">
                                                         <i class="bi bi-pencil me-1"></i>Modifier
                                                     </button>
                                                     <a href="/admin/delete/<%= recipe.id %>" 
@@ -333,6 +333,30 @@
                             >
                         </div>
 
+                        <!-- Ingrédients -->
+                        <div class="mb-3">
+                            <label class="form-label admin-modal">
+                                Ingrédients
+                            </label>
+                            <div id="addIngredientsList" class="d-flex flex-column gap-2"></div>
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="addIngredientBtn">
+                                <i class="bi bi-plus-lg me-1"></i>Ajouter un ingrédient
+                            </button>
+                            <small class="form-text text-muted d-block mt-1">Nom + quantité + unité (optionnel).</small>
+                        </div>
+
+                        <!-- Instructions -->
+                        <div class="mb-3">
+                            <label class="form-label admin-modal">
+                                Instructions
+                            </label>
+                            <div id="addInstructionsList" class="d-flex flex-column gap-2"></div>
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="addInstructionBtn">
+                                <i class="bi bi-plus-lg me-1"></i>Ajouter une étape
+                            </button>
+                            <small class="form-text text-muted d-block mt-1">Les étapes sont numérotées automatiquement.</small>
+                        </div>
+
                         <!-- Image (Upload) -->
                         <div class="mb-3">
                             <label for="modal_image_add" class="form-label admin-modal">Image</label>
@@ -469,6 +493,30 @@
                             >
                             <small class="form-text text-muted">Laisser vide pour conserver l'image actuelle. Formats acceptés : JPG, PNG, WEBP (max 5MB)</small>
                         </div>
+
+                        <!-- Ingrédients -->
+                        <div class="mb-3">
+                            <label class="form-label admin-modal">
+                                Ingrédients
+                            </label>
+                            <div id="editIngredientsList" class="d-flex flex-column gap-2"></div>
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="editIngredientBtn">
+                                <i class="bi bi-plus-lg me-1"></i>Ajouter un ingrédient
+                            </button>
+                            <small class="form-text text-muted d-block mt-1">Nom + quantité + unité (optionnel).</small>
+                        </div>
+
+                        <!-- Instructions -->
+                        <div class="mb-3">
+                            <label class="form-label admin-modal">
+                                Instructions
+                            </label>
+                            <div id="editInstructionsList" class="d-flex flex-column gap-2"></div>
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="editInstructionBtn">
+                                <i class="bi bi-plus-lg me-1"></i>Ajouter une étape
+                            </button>
+                            <small class="form-text text-muted d-block mt-1">Les étapes sont numérotées automatiquement.</small>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -505,11 +553,117 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     
     <script>
+        // --- Helpers UI ingrédients / instructions ---
+        function escapeHtml(str) {
+            return String(str || '')
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
+
+        function addIngredientRow(listSelector, ingredient) {
+            const nom = ingredient && ingredient.nom != null ? ingredient.nom : '';
+            const quantite = ingredient && ingredient.quantite != null ? ingredient.quantite : '';
+            const unite = ingredient && ingredient.unite != null ? ingredient.unite : '';
+
+            const $row = $(`
+                <div class="row g-2 align-items-center ingredient-row">
+                    <div class="col-md-5">
+                        <input type="text" class="form-control" name="ingredient_nom" placeholder="Nom (ex: Farine)" value="${escapeHtml(nom)}">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" step="0.01" class="form-control" name="ingredient_quantite" placeholder="Qté" value="${escapeHtml(quantite)}">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" name="ingredient_unite" placeholder="Unité (g, ml...)" value="${escapeHtml(unite)}">
+                    </div>
+                    <div class="col-md-1 text-end">
+                        <button type="button" class="btn btn-outline-danger btn-sm remove-ingredient" title="Supprimer">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            `);
+
+            $(listSelector).append($row);
+        }
+
+        function renumberInstructions(listSelector) {
+            $(listSelector).find('.instruction-row').each(function(idx) {
+                $(this).find('.step-number').text(idx + 1);
+            });
+        }
+
+        function addInstructionRow(listSelector, stepText) {
+            const description = stepText != null ? stepText : '';
+
+            const $row = $(`
+                <div class="input-group instruction-row">
+                    <span class="input-group-text step-number">1</span>
+                    <textarea class="form-control" name="instruction_description" rows="2" placeholder="Décrivez l'étape...">${escapeHtml(description)}</textarea>
+                    <button type="button" class="btn btn-outline-danger remove-instruction" title="Supprimer">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+            `);
+
+            $(listSelector).append($row);
+            renumberInstructions(listSelector);
+        }
+
+        // Handlers globaux (add + edit)
+        $(document).on('click', '.remove-ingredient', function() {
+            $(this).closest('.ingredient-row').remove();
+        });
+
+        $(document).on('click', '.remove-instruction', function() {
+            const $list = $(this).closest('.instruction-row').parent();
+            $(this).closest('.instruction-row').remove();
+            renumberInstructions($list);
+        });
+
+        // Initialisation du formulaire d'ajout (on repart propre à chaque ouverture)
+        $(document).ready(function() {
+            function resetAddModal() {
+                $('#addIngredientsList').empty();
+                $('#addInstructionsList').empty();
+                addIngredientRow('#addIngredientsList');
+                addInstructionRow('#addInstructionsList');
+            }
+
+            $('#addIngredientBtn').on('click', function() {
+                addIngredientRow('#addIngredientsList');
+            });
+
+            $('#addInstructionBtn').on('click', function() {
+                addInstructionRow('#addInstructionsList');
+            });
+
+            $('#addRecipeModal').on('shown.bs.modal', function() {
+                if ($('#addIngredientsList .ingredient-row').length === 0 && $('#addInstructionsList .instruction-row').length === 0) {
+                    resetAddModal();
+                }
+            });
+
+            $('#addRecipeModal').on('hidden.bs.modal', function() {
+                const form = $(this).find('form')[0];
+                if (form) form.reset();
+                resetAddModal();
+            });
+
+            // Init au chargement
+            resetAddModal();
+        });
+
         // Fonction pour ouvrir la modal d'édition et charger les données
         function openEditModal(recipeId) {
             // Réinitialiser le formulaire
             $('#editRecipeForm')[0].reset();
             $('#edit_current_image_container').hide();
+            $('#editIngredientsList').empty();
+            $('#editInstructionsList').empty();
             
             // Charger les données de la recette via API
             $.ajax({
@@ -523,6 +677,24 @@
                     $('#edit_modal_temps_preparation').val(recipe.temps_preparation || '');
                     $('#edit_modal_difficulte').val(recipe.difficulte || '');
                     $('#edit_modal_portions_defaut').val(recipe.portions_defaut || 4);
+
+                    // Ingrédients (pré-remplissage)
+                    if (recipe.ingredients && recipe.ingredients.length > 0) {
+                        recipe.ingredients.forEach(function(ing) {
+                            addIngredientRow('#editIngredientsList', ing);
+                        });
+                    } else {
+                        addIngredientRow('#editIngredientsList');
+                    }
+
+                    // Instructions (pré-remplissage)
+                    if (recipe.instructions && recipe.instructions.length > 0) {
+                        recipe.instructions.forEach(function(step) {
+                            addInstructionRow('#editInstructionsList', step.description || '');
+                        });
+                    } else {
+                        addInstructionRow('#editInstructionsList');
+                    }
                     
                     // Afficher l'image actuelle si elle existe
                     if (recipe.image) {
@@ -558,6 +730,22 @@
                 }
             });
         }
+
+        // Boutons ajouter (edit modal)
+        $(document).on('click', '#editIngredientBtn', function() {
+            addIngredientRow('#editIngredientsList');
+        });
+
+        $(document).on('click', '#editInstructionBtn', function() {
+            addInstructionRow('#editInstructionsList');
+        });
+
+        // Ouvrir la modal d'édition depuis le tableau (sans inline JS pour éviter les soucis de parsing)
+        $(document).on('click', '.js-open-edit-modal', function() {
+            const recipeId = $(this).data('recipe-id');
+            if (!recipeId) return;
+            openEditModal(recipeId);
+        });
     </script>
 </body>
 </html>

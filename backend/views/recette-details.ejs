@@ -76,7 +76,15 @@
                         <% ingredients.forEach(ing => { %>
                             <li class="ingredient-item">
                                 <span class="ingredient-name"><%= ing.nom %></span>
-                                <span class="ingredient-quantity"><%= ing.quantite %> <%= ing.unite %></span>
+                                <span class="ingredient-quantity">
+                                    <% if (ing.quantite !== null && ing.quantite !== undefined && ing.unite) { %>
+                                        <%= ing.quantite %> <%= ing.unite %>
+                                    <% } else if (ing.quantite !== null && ing.quantite !== undefined) { %>
+                                        <%= ing.quantite %>
+                                    <% } else if (ing.unite) { %>
+                                        <%= ing.unite %>
+                                    <% } %>
+                                </span>
                             </li>
                         <% }); %>
                     </ul>
